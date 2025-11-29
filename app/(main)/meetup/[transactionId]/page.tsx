@@ -119,6 +119,12 @@ export default function MeetupPage({ params }: { params: Promise<{ transactionId
     setPaying(true);
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/signin";
+        return;
+      }
+
       // In real app, integrate with Razorpay
       const mockPaymentId = `pay_${Date.now()}`;
 
@@ -126,7 +132,7 @@ export default function MeetupPage({ params }: { params: Promise<{ transactionId
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer mock-token",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           transactionId,
@@ -151,11 +157,17 @@ export default function MeetupPage({ params }: { params: Promise<{ transactionId
 
   const handleConfirmReceipt = async () => {
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/signin";
+        return;
+      }
+
       const res = await fetch("/api/transactions/confirm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer mock-token",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ transactionId }),
       });

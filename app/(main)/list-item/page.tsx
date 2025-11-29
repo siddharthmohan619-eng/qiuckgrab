@@ -44,12 +44,17 @@ export default function ListItemPage() {
     setError(null);
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/signin";
+        return;
+      }
+
       const res = await fetch("/api/items", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // In a real app, get token from auth context
-          Authorization: "Bearer mock-token",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: formData.name,

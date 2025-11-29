@@ -77,12 +77,18 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
     setSubmitting(true);
 
     try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        window.location.href = "/signin";
+        return;
+      }
+
       const transactionId = id.replace("new-", "");
       const res = await fetch("/api/disputes", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: "Bearer mock-token",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           transactionId,
