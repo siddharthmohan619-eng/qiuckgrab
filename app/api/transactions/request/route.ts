@@ -64,8 +64,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-
-
     // Check for existing pending transaction
     const existingTransaction = await prisma.transaction.findFirst({
       where: {
