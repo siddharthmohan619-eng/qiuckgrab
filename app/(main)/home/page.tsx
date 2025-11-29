@@ -159,7 +159,7 @@ export default function HomePage() {
       <header className="bg-white border-b sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-4">
-            <Link href="/" className="flex items-center space-x-2">
+            <Link href="/home" className="flex items-center space-x-2">
               <Zap className="h-8 w-8 text-blue-600" />
               <span className="text-2xl font-bold">QuickGrab</span>
             </Link>
