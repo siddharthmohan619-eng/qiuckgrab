@@ -68,8 +68,10 @@ export default function ChatPage({ params }: { params: Promise<{ transactionId: 
         if (user && typeof user.id === "string") {
           setCurrentUser(user);
         }
-      } catch {
-        // Invalid JSON in localStorage
+      } catch (err) {
+        // Invalid JSON in localStorage, clear corrupted data
+        console.error("Failed to parse user data from localStorage:", err);
+        localStorage.removeItem("user");
       }
     }
   }, []);
@@ -101,7 +103,7 @@ export default function ChatPage({ params }: { params: Promise<{ transactionId: 
       setTransaction(data.transaction);
       // Load messages from transaction
       if (data.transaction.messages) {
-        setMessages(data.transaction.messages.map((msg: Message & { isAI?: boolean }) => ({
+        setMessages(data.transaction.messages.map((msg: Message) => ({
           ...msg,
           isAI: msg.isAI || false,
         })));
