@@ -64,19 +64,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if buyer is verified
-    const buyer = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { verificationStatus: true },
-    });
-
-    if (!buyer || buyer.verificationStatus !== "VERIFIED") {
-      return NextResponse.json(
-        { error: "Only verified students can make purchases" },
-        { status: 403 }
-      );
-    }
-
     // Check for existing pending transaction
     const existingTransaction = await prisma.transaction.findFirst({
       where: {

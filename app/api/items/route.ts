@@ -19,19 +19,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check if user is verified
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-      select: { verificationStatus: true },
-    });
-
-    if (!user || user.verificationStatus !== "VERIFIED") {
-      return NextResponse.json(
-        { error: "Only verified students can list items" },
-        { status: 403 }
-      );
-    }
-
     const body = await request.json();
     
     // Validate input

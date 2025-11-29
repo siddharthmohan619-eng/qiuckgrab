@@ -25,10 +25,6 @@ export async function POST(request: NextRequest) {
     // Build database query
     const where: Record<string, unknown> = {
       availabilityStatus: "AVAILABLE",
-      // Only show items from verified sellers
-      seller: {
-        verificationStatus: "VERIFIED",
-      },
     };
 
     // Search by item name/description
