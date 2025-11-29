@@ -145,7 +145,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
           {/* Left: Image & Description */}
           <div className="space-y-6">
             {/* Main Image */}
-            <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+            <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden">
               {item.photo ? (
                 <img src={item.photo} alt={item.name} className="w-full h-full object-cover" />
               ) : (
@@ -159,7 +159,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
             {item.photos.length > 0 && (
               <div className="flex gap-2 overflow-x-auto">
                 {item.photos.map((photo, i) => (
-                  <div key={i} className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                  <div key={i} className="w-20 h-20 bg-gray-100 rounded-2xl overflow-hidden flex-shrink-0">
                     <img src={photo} alt={`${item.name} ${i + 1}`} className="w-full h-full object-cover" />
                   </div>
                 ))}
@@ -201,7 +201,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
                 </div>
 
                 {/* Price Analysis */}
-                <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                <div className="bg-gray-50 rounded-2xl p-4 mb-4">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Campus Average:</span>
                     <span className="font-medium">${item.avgCampusPrice?.toFixed(2) || "N/A"}</span>
@@ -229,7 +229,7 @@ export default function ItemPage({ params }: { params: Promise<{ id: string }> }
               </CardHeader>
               <CardContent>
                 <Link href={`/profile/${item.seller.id}`}>
-                  <div className="flex items-center space-x-4 hover:bg-gray-50 p-2 rounded-lg -m-2">
+                  <div className="flex items-center space-x-4 hover:bg-gray-50 p-2 rounded-2xl -m-2">
                     <Avatar className="h-16 w-16">
                       <AvatarFallback className="text-lg">
                         {item.seller.name.charAt(0)}

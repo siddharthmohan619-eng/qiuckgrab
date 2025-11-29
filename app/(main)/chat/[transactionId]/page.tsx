@@ -237,7 +237,7 @@ export default function ChatPage({ params }: { params: Promise<{ transactionId: 
               className={`flex ${isAI ? "justify-center" : isOwnMessage ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`max-w-[80%] rounded-lg p-3 ${
+                className={`max-w-[80%] rounded-2xl p-3 ${
                   isAI
                     ? "bg-yellow-50 border border-yellow-200 text-sm"
                     : isOwnMessage

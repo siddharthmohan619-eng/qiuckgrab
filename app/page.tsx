@@ -6,12 +6,12 @@ import { Search, Shield, MessageCircle, Star, Zap, Users } from "lucide-react";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-orange-50 to-white">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Zap className="h-8 w-8 text-blue-600" />
+            <Zap className="h-8 w-8 text-orange-600" />
             <span className="text-2xl font-bold text-gray-900">QuickGrab</span>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
@@ -20,10 +20,10 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center space-x-4">
             <Link href="/signup">
-              <Button variant="outline">Sign Up</Button>
+              <Button variant="outline" className="rounded-2xl">Sign Up</Button>
             </Link>
             <Link href="/signup">
-              <Button>Get Started</Button>
+              <Button className="bg-orange-600 rounded-2xl">Get Started</Button>
             </Link>
           </div>
         </div>
@@ -35,7 +35,7 @@ export default function LandingPage() {
           🎓 Verified Students Only
         </Badge>
         <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-          The <span className="text-blue-600">AI-Powered</span> Campus
+          The <span className="text-orange-600">AI-Powered</span> Campus
           <br />Marketplace
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
@@ -44,13 +44,13 @@ export default function LandingPage() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/signup">
-            <Button size="lg" className="text-lg px-8">
+            <Button size="lg" className="text-lg px-8 bg-orange-600 text-white hover:bg-orange-700 rounded-2xl">
               Start Trading
               <Zap className="ml-2 h-5 w-5" />
             </Button>
           </Link>
           <Link href="/home">
-            <Button size="lg" variant="outline" className="text-lg px-8">
+            <Button size="lg" variant="outline" className="text-lg px-8 rounded-2xl">
               Browse Items
               <Search className="ml-2 h-5 w-5" />
             </Button>
@@ -63,32 +63,32 @@ export default function LandingPage() {
         <h2 className="text-3xl font-bold text-center mb-12">Why QuickGrab?</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <FeatureCard
-            icon={<Shield className="h-10 w-10 text-blue-600" />}
+            icon={<Shield className="h-10 w-10 text-orange-600 rounded-4xl " />}
             title="AI Verified Students"
             description="Every user is verified with their student ID using AI technology. Trade with confidence."
           />
           <FeatureCard
-            icon={<Search className="h-10 w-10 text-blue-600" />}
+            icon={<Search className="h-10 w-10 text-orange-600" />}
             title="Smart Search"
             description="AI-powered search understands what you need. Just describe it naturally."
           />
           <FeatureCard
-            icon={<MessageCircle className="h-10 w-10 text-blue-600" />}
+            icon={<MessageCircle className="h-10 w-10 text-orange-600" />}
             title="Real-Time Chat"
             description="Coordinate instantly with sellers. AI suggests safe meetup spots on campus."
           />
           <FeatureCard
-            icon={<Zap className="h-10 w-10 text-blue-600" />}
+            icon={<Zap className="h-10 w-10 text-orange-600" />}
             title="Escrow Payments"
             description="Secure payments held until you confirm receipt. Full protection for buyers."
           />
           <FeatureCard
-            icon={<Star className="h-10 w-10 text-blue-600" />}
+            icon={<Star className="h-10 w-10 text-orange-600" />}
             title="Trust Network"
             description="Ratings, badges, and trust scores help you find reliable traders."
           />
           <FeatureCard
-            icon={<Users className="h-10 w-10 text-blue-600" />}
+            icon={<Users className="h-10 w-10 text-orange-600" />}
             title="AI Moderation"
             description="Automatic scam detection and fair dispute resolution powered by AI."
           />
@@ -113,7 +113,7 @@ export default function LandingPage() {
         <h2 className="text-3xl font-bold mb-6">Ready to QuickGrab?</h2>
         <p className="text-gray-600 mb-8">Join thousands of verified students trading safely on campus.</p>
         <Link href="/signup">
-          <Button size="lg" className="text-lg px-12">
+          <Button size="lg" className="text-lg px-12 bg-orange-600 rounded-2xl">
             Create Your Account
           </Button>
         </Link>
@@ -123,7 +123,7 @@ export default function LandingPage() {
       <footer className="border-t bg-gray-50 py-8">
         <div className="container mx-auto px-4 text-center text-gray-600">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Zap className="h-6 w-6 text-blue-600" />
+            <Zap className="h-6 w-6 text-orange-600" />
             <span className="text-xl font-bold text-gray-900">QuickGrab</span>
           </div>
           <p>&copy; {new Date().getFullYear()} QuickGrab. AI-Powered Campus Marketplace.</p>
@@ -150,7 +150,7 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode; titl
 function Step({ number, title, description }: { number: number; title: string; description: string }) {
   return (
     <div className="text-center">
-      <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+      <div className="w-12 h-12 bg-orange-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
         {number}
       </div>
       <h3 className="font-semibold mb-2">{title}</h3>

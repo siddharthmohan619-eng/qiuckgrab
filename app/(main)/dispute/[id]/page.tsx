@@ -155,7 +155,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
               <CardTitle>Open a Dispute</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-4">
                 <div className="flex items-start">
                   <AlertTriangle className="h-5 w-5 text-yellow-600 mr-3 mt-0.5" />
                   <div className="text-sm">
@@ -180,7 +180,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
 
               <div className="space-y-2">
                 <label className="text-sm font-medium">Upload Evidence (Optional)</label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                <div className="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center">
                   <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">Upload photos or screenshots</p>
                 </div>
@@ -236,11 +236,11 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="p-3 bg-gray-50 rounded-2xl">
                     <p className="text-xs text-gray-500 uppercase mb-1">Buyer</p>
                     <p className="font-medium">{dispute.transaction.buyer.name}</p>
                   </div>
-                  <div className="p-3 bg-gray-50 rounded-lg">
+                  <div className="p-3 bg-gray-50 rounded-2xl">
                     <p className="text-xs text-gray-500 uppercase mb-1">Seller</p>
                     <p className="font-medium">{dispute.transaction.seller.name}</p>
                   </div>
@@ -258,7 +258,7 @@ export default function DisputePage({ params }: { params: Promise<{ id: string }
                 {dispute.photos.length > 0 && (
                   <div className="flex gap-2 mt-4">
                     {dispute.photos.map((photo, i) => (
-                      <div key={i} className="w-20 h-20 bg-gray-100 rounded-lg overflow-hidden">
+                      <div key={i} className="w-20 h-20 bg-gray-100 rounded-2xl overflow-hidden">
                         <img src={photo} alt={`Evidence ${i + 1}`} className="w-full h-full object-cover" />
                       </div>
                     ))}

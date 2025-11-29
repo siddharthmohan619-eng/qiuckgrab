@@ -293,9 +293,9 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
                   <Card className="hover:shadow-md transition-shadow">
                     <CardContent className="p-4">
                       <div className="flex items-center space-x-4">
-                        <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <div className="w-16 h-16 bg-gray-100 rounded-2xl flex items-center justify-center">
                           {item.photo ? (
-                            <img src={item.photo} alt={item.name} className="w-full h-full object-cover rounded-lg" />
+                            <img src={item.photo} alt={item.name} className="w-full h-full object-cover rounded-2xl" />
                           ) : (
                             <Package className="h-8 w-8 text-gray-400" />
                           )}

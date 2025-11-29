@@ -240,7 +240,7 @@ export default function MeetupPage({ params }: { params: Promise<{ transactionId
               <div
                 key={index}
                 onClick={() => setSelectedLocation(location)}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                   selectedLocation?.name === location.name
                     ? "border-blue-600 bg-blue-50"
                     : "border-gray-200 hover:border-gray-300"
