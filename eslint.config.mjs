@@ -13,6 +13,17 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
   ]),
+  // Custom rule overrides for MVP
+  {
+    rules: {
+      // Allow setState in useEffect for data fetching patterns (common in Next.js)
+      "react-hooks/set-state-in-effect": "off",
+      // Downgrade unused vars to warning
+      "@typescript-eslint/no-unused-vars": "warn",
+      // Downgrade img warnings for MVP
+      "@next/next/no-img-element": "warn",
+    },
+  },
 ]);
 
 export default eslintConfig;

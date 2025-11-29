@@ -42,3 +42,5 @@ next-env.d.ts
 
 # personal notes
 idea.md
+
+/app/generated/prisma

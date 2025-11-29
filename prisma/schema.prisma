@@ -1,0 +1,217 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// QuickGrab - AI-Powered Student Marketplace
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Enums
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum TransactionStatus {
+  REQUESTED
+  ACCEPTED
+  PAID
+  MEETING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum ItemCondition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+  POOR
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  SOLD
+  RESERVED
+  UNAVAILABLE
+}
+
+enum DisputeDecision {
+  PENDING
+  BUYER_FAVOR
+  SELLER_FAVOR
+  SPLIT
+  DISMISSED
+}
+
+// Models according to idea.md
+
+model User {
+  id                 String              @id @default(uuid())
+  name               String
+  email              String              @unique
+  password           String
+  college            String?
+  photo              String?
+  studentIdPhoto     String?
+  verificationStatus VerificationStatus  @default(UNVERIFIED)
+  trustScore         Int                 @default(0)
+  badges             String[]            @default([])
+  avgRating          Float               @default(0)
+  completedDeals     Int                 @default(0)
+  cancellationRate   Float               @default(0)
+  lastSeen           DateTime            @default(now())
+  location           String?
+  locationLat        Float?
+  locationLng        Float?
+  isOnline           Boolean             @default(false)
+  emailVerified      Boolean             @default(false)
+  emailVerificationOtp String?
+  otpExpiresAt       DateTime?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  // Relations
+  items              Item[]
+  buyerTransactions  Transaction[]       @relation("BuyerTransactions")
+  sellerTransactions Transaction[]       @relation("SellerTransactions")
+  ratingsGiven       Rating[]            @relation("RatingsGiven")
+  ratingsReceived    Rating[]            @relation("RatingsReceived")
+  sentMessages       Message[]           @relation("SentMessages")
+
+  @@index([email])
+  @@index([college])
+  @@index([verificationStatus])
+}
+
+model Item {
+  id                 String             @id @default(uuid())
+  sellerId           String
+  name               String
+  category           String
+  description        String?
+  price              Float
+  photo              String?
+  photos             String[]           @default([])
+  condition          ItemCondition      @default(GOOD)
+  availabilityStatus AvailabilityStatus @default(AVAILABLE)
+  aiPriceRating      String?            // "Fair" / "Overpriced by 20%" / "Underpriced"
+  avgCampusPrice     Float?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  // Relations
+  seller             User               @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  transactions       Transaction[]
+
+  @@index([sellerId])
+  @@index([category])
+  @@index([availabilityStatus])
+  @@index([name])
+}
+
+model Transaction {
+  id             String            @id @default(uuid())
+  buyerId        String
+  sellerId       String
+  itemId         String
+  status         TransactionStatus @default(REQUESTED)
+  escrowAmount   Float
+  meetupLocation String?
+  meetupLat      Float?
+  meetupLng      Float?
+  meetupTime     DateTime?
+  countdownStart DateTime?
+  countdownEnd   DateTime?
+  paymentId      String?           // Razorpay payment ID
+  refundId       String?           // Razorpay refund ID
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  // Relations
+  buyer          User              @relation("BuyerTransactions", fields: [buyerId], references: [id], onDelete: Cascade)
+  seller         User              @relation("SellerTransactions", fields: [sellerId], references: [id], onDelete: Cascade)
+  item           Item              @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  messages       Message[]
+  disputes       Dispute[]
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([itemId])
+  @@index([status])
+}
+
+model Rating {
+  id         String   @id @default(uuid())
+  userId     String
+  fromUserId String
+  stars      Int      // 1-5
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  // Relations
+  user       User     @relation("RatingsReceived", fields: [userId], references: [id], onDelete: Cascade)
+  fromUser   User     @relation("RatingsGiven", fields: [fromUserId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, fromUserId])
+  @@index([userId])
+  @@index([fromUserId])
+}
+
+model Message {
+  id            String      @id @default(uuid())
+  transactionId String
+  senderId      String
+  content       String
+  isAI          Boolean     @default(false)
+  isFlagged     Boolean     @default(false)
+  flagReason    String?
+  createdAt     DateTime    @default(now())
+
+  // Relations
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  sender        User        @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([transactionId])
+  @@index([senderId])
+}
+
+model Dispute {
+  id            String          @id @default(uuid())
+  transactionId String
+  evidenceText  String?
+  photos        String[]        @default([])
+  decision      DisputeDecision @default(PENDING)
+  confidence    Float?          // AI confidence level
+  aiSummary     String?
+  resolvedAt    DateTime?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  // Relations
+  transaction   Transaction     @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  @@index([transactionId])
+  @@index([decision])
+}
+
+// Session model for authentication
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+}
