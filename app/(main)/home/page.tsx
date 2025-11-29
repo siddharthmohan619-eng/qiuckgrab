@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Button, Input, Card, CardContent, CardHeader, CardTitle, Badge, Avatar, AvatarFallback } from "@/components/ui";
-import { Search, Zap, Filter, Star, Clock, Mic } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Button, Input, Card, CardContent, CardHeader, CardTitle, Badge, Avatar, AvatarFallback, DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuLabel } from "@/components/ui";
+import { Search, Zap, Filter, Star, Clock, Mic, User, LogOut } from "lucide-react";
 
 interface AuthUser {
   id: string;
@@ -34,6 +35,7 @@ interface Item {
 }
 
 export default function HomePage() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
@@ -63,6 +65,15 @@ export default function HomePage() {
   useEffect(() => {
     fetchItems();
   }, []);
+
+  const handleLogout = () => {
+    // Clear user session data from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setCurrentUser(null);
+    // Redirect to signin page
+    router.push("/signin");
+  };
 
   const fetchItems = async () => {
     setLoading(true);
@@ -168,11 +179,35 @@ export default function HomePage() {
                 <Button>List Item</Button>
               </Link>
               {currentUser ? (
-                <Link href={`/profile/${currentUser.id}`}>
-                  <Avatar>
-                    <AvatarFallback>{currentUser.name?.charAt(0) || "U"}</AvatarFallback>
-                  </Avatar>
-                </Link>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className="focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full">
+                      <Avatar>
+                        <AvatarFallback>{currentUser.name?.charAt(0) || "U"}</AvatarFallback>
+                      </Avatar>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1">
+                        <p className="text-sm font-medium leading-none">{currentUser.name}</p>
+                        <p className="text-xs leading-none text-gray-500">{currentUser.email}</p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href={`/profile/${currentUser.id}`} className="flex items-center cursor-pointer">
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="text-red-600 focus:text-red-600 focus:bg-red-50">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
                 <Link href="/signin">
                   <Avatar>

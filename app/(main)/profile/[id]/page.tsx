@@ -2,8 +2,9 @@
 
 import { useState, useEffect, use, useCallback } from "react";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle, Badge, Avatar, AvatarFallback } from "@/components/ui";
-import { ArrowLeft, Zap, Star, Shield, Package } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle, Badge, Avatar, AvatarFallback, Button } from "@/components/ui";
+import { ArrowLeft, Zap, Star, Shield, Package, LogOut } from "lucide-react";
 
 interface UserProfile {
   id: string;
@@ -42,12 +43,37 @@ interface Item {
 
 export default function ProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
+  const router = useRouter();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [activeTab, setActiveTab] = useState<"listings" | "reviews">("listings");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isOwnProfile, setIsOwnProfile] = useState(false);
+
+  // Check if viewing own profile
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const currentUser = JSON.parse(userStr);
+        if (currentUser && currentUser.id === id) {
+          setIsOwnProfile(true);
+        }
+      } catch {
+        // Invalid JSON in localStorage
+      }
+    }
+  }, [id]);
+
+  const handleLogout = () => {
+    // Clear user session data from localStorage
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    // Redirect to signin page
+    router.push("/signin");
+  };
 
   const fetchProfileData = useCallback(async () => {
     try {
@@ -130,7 +156,19 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
             <Zap className="h-6 w-6 text-blue-600 mr-2" />
             <span className="font-bold">QuickGrab</span>
           </div>
-          <div className="w-5"></div>
+          {isOwnProfile ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleLogout}
+              className="text-red-600 hover:text-red-700 hover:bg-red-50"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              Logout
+            </Button>
+          ) : (
+            <div className="w-5"></div>
+          )}
         </div>
       </header>
 
