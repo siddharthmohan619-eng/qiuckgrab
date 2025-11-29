@@ -47,70 +47,32 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
   const [items, setItems] = useState<Item[]>([]);
   const [activeTab, setActiveTab] = useState<"listings" | "reviews">("listings");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const fetchProfileData = useCallback(async () => {
-    // Mock data for demo - in production, fetch from API
-    const mockUser: UserProfile = {
-      id: id,
-      name: "Jane Smith",
-      photo: null,
-      college: "State University",
-      verificationStatus: "VERIFIED",
-      trustScore: 85,
-      badges: ["🏆 Trusted Seller", "⚡ Quick Responder", "💎 Fair Pricer"],
-      avgRating: 4.8,
-      completedDeals: 47,
-      cancellationRate: 0.02,
-      createdAt: "2024-01-15",
-    };
+    try {
+      setError(null);
+      const res = await fetch(`/api/users/${id}`);
+      
+      if (!res.ok) {
+        const errorData = await res.json().catch(() => ({}));
+        setError(errorData.error || "Failed to load profile");
+        setLoading(false);
+        return;
+      }
 
-    const mockRatings: Rating[] = [
-      {
-        id: "1",
-        stars: 5,
-        comment: "Great seller! Fast response and item was exactly as described.",
-        createdAt: "2024-11-20",
-        fromUser: { id: "u1", name: "John Doe", photo: null },
-      },
-      {
-        id: "2",
-        stars: 5,
-        comment: "Super smooth transaction. Would buy again!",
-        createdAt: "2024-11-18",
-        fromUser: { id: "u2", name: "Alex Johnson", photo: null },
-      },
-      {
-        id: "3",
-        stars: 4,
-        comment: "Good experience overall. Item was in good condition.",
-        createdAt: "2024-11-15",
-        fromUser: { id: "u3", name: "Sam Wilson", photo: null },
-      },
-    ];
-
-    const mockItems: Item[] = [
-      {
-        id: "i1",
-        name: "iPhone 13 Charger",
-        price: 25,
-        photo: null,
-        condition: "NEW",
-        availabilityStatus: "AVAILABLE",
-      },
-      {
-        id: "i2",
-        name: "Calculus Textbook",
-        price: 40,
-        photo: null,
-        condition: "GOOD",
-        availabilityStatus: "AVAILABLE",
-      },
-    ];
-
-    setUser(mockUser);
-    setRatings(mockRatings);
-    setItems(mockItems);
-    setLoading(false);
+      const data = await res.json();
+      setUser(data.user);
+      setRatings(data.user.ratingsReceived || []);
+      setItems(data.user.items || []);
+    } catch (err) {
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error fetching profile data:", err);
+      }
+      setError("Failed to connect to server");
+    } finally {
+      setLoading(false);
+    }
   }, [id]);
 
   useEffect(() => {
@@ -129,6 +91,19 @@ export default function ProfilePage({ params }: { params: Promise<{ id: string }
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <Link href="/home" className="text-blue-600 hover:underline">
+            Go back to home
+          </Link>
+        </div>
       </div>
     );
   }

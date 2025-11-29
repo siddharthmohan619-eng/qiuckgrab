@@ -3,7 +3,14 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button, Input, Card, CardContent, CardHeader, CardTitle, Badge, Avatar, AvatarFallback } from "@/components/ui";
-import { Search, Zap, Filter, MapPin, Star, Clock, Mic } from "lucide-react";
+import { Search, Zap, Filter, Star, Clock, Mic } from "lucide-react";
+
+interface AuthUser {
+  id: string;
+  name: string;
+  email: string;
+  photo: string | null;
+}
 
 interface Item {
   id: string;
@@ -31,6 +38,26 @@ export default function HomePage() {
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(null);
+
+  // Load user from localStorage on mount
+  useEffect(() => {
+    const userStr = localStorage.getItem("user");
+    if (userStr) {
+      try {
+        const user = JSON.parse(userStr);
+        // Validate user object has required fields
+        if (user && typeof user.id === "string" && typeof user.name === "string") {
+          setCurrentUser(user);
+        } else {
+          setCurrentUser(null);
+        }
+      } catch {
+        // Invalid JSON in localStorage
+        setCurrentUser(null);
+      }
+    }
+  }, []);
 
   // Fetch items on mount
   useEffect(() => {
@@ -140,11 +167,19 @@ export default function HomePage() {
               <Link href="/list-item">
                 <Button>List Item</Button>
               </Link>
-              <Link href="/profile/me">
-                <Avatar>
-                  <AvatarFallback>U</AvatarFallback>
-                </Avatar>
-              </Link>
+              {currentUser ? (
+                <Link href={`/profile/${currentUser.id}`}>
+                  <Avatar>
+                    <AvatarFallback>{currentUser.name?.charAt(0) || "U"}</AvatarFallback>
+                  </Avatar>
+                </Link>
+              ) : (
+                <Link href="/signin">
+                  <Avatar>
+                    <AvatarFallback>U</AvatarFallback>
+                  </Avatar>
+                </Link>
+              )}
             </div>
           </div>
 
