@@ -417,6 +417,45 @@ export default function ChatPage({
     }
   };
 
+  const handleConfirmDelivery = async () => {
+    if (!currentUser) return;
+
+    setConfirmingDelivery(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("Not authenticated");
+      }
+
+      const res = await fetch(
+        `/api/transactions/${transactionId}/confirm-delivery`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ transactionId }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to confirm delivery");
+      }
+
+      // Refresh transaction data
+      await fetchTransaction();
+    } catch (err) {
+      alert(
+        err instanceof Error ? err.message : "Failed to confirm delivery"
+      );
+    } finally {
+      setConfirmingDelivery(false);
+    }
+  };
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "REQUESTED":
